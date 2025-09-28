@@ -1,0 +1,10 @@
+[package]
+name = "oacounter"
+edition = "2024"
+
+[dependencies]
+openaction = "2.1"
+serde = "1.0"
+tokio = { version = "1.47", features = ["rt-multi-thread", "macros"] }
+log = "0.4"
+simplelog = "0.12"
