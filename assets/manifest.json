@@ -26,6 +26,14 @@
 			"Icon": "icon",
 			"Tooltip": "A counter that remembers its value",
 			"Controllers": ["Keypad", "Encoder", "Neo"],
+			"Encoder": {
+				"layout": "layouts/counter_dial.json",
+				"TriggerDescription": {
+					"Rotate": "Count",
+					"Push": "Increment",
+					"Touch": "Increment"
+				}
+			},
 			"States": [{ "Title": "0" }]
 		},
 		{
@@ -34,6 +42,14 @@
 			"Icon": "icon",
 			"Tooltip": "A counter that doesn't remember its value",
 			"Controllers": ["Keypad", "Encoder", "Neo"],
+			"Encoder": {
+				"layout": "layouts/counter_dial.json",
+				"TriggerDescription": {
+					"Rotate": "Count",
+					"Push": "Increment",
+					"Touch": "Increment"
+				}
+			},
 			"States": [{ "Title": "0" }]
 		}
 	]
