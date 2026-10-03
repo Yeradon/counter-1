@@ -1,5 +1,4 @@
 use openaction::*;
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -8,10 +7,33 @@ struct CounterSettings {
 	step: isize,
 	value: isize,
 }
+
 impl Default for CounterSettings {
 	fn default() -> Self {
 		Self { step: 1, value: 0 }
 	}
+}
+
+async fn apply_layout(instance: &Instance) -> OpenActionResult<()> {
+	if instance.controller == "Neo" || instance.controller == "Infobar" {
+		let _ = instance
+			.set_feedback_layout("layouts/counter_neo.json".to_string())
+			.await;
+	} else if instance.controller == "Encoder" {
+		let _ = instance
+			.set_feedback_layout("layouts/counter_dial.json".to_string())
+			.await;
+	}
+	Ok(())
+}
+
+async fn update_display(instance: &Instance, value: isize) -> OpenActionResult<()> {
+	instance
+		.set_title(Some(value.to_string()), None)
+		.await?;
+	instance
+		.set_feedback(&serde_json::json!({ "value": value.to_string() }))
+		.await
 }
 
 async fn increment(
@@ -22,9 +44,7 @@ async fn increment(
 	let mut clone = settings.clone();
 	clone.value = settings.value + step;
 	instance.set_settings(&clone).await?;
-	instance
-		.set_title(Some(clone.value.to_string()), None)
-		.await
+	update_display(instance, clone.value).await
 }
 
 struct PersistedCounterAction;
@@ -33,16 +53,21 @@ impl Action for PersistedCounterAction {
 	const UUID: ActionUuid = "me.amankhanna.oacounter.persisted";
 	type Settings = CounterSettings;
 
-	async fn key_up(&self, instance: &Instance, settings: &Self::Settings) -> OpenActionResult<()> {
-		increment(instance, settings, settings.step).await
-	}
-
-	async fn dial_up(
+	async fn will_appear(
 		&self,
 		instance: &Instance,
 		settings: &Self::Settings,
 	) -> OpenActionResult<()> {
-		self.key_down(instance, settings).await
+		apply_layout(instance).await?;
+		update_display(instance, settings.value).await
+	}
+
+	async fn key_up(&self, instance: &Instance, settings: &Self::Settings) -> OpenActionResult<()> {
+		increment(instance, settings, settings.step).await
+	}
+
+	async fn dial_up(&self, instance: &Instance, settings: &Self::Settings) -> OpenActionResult<()> {
+		increment(instance, settings, settings.step).await
 	}
 
 	async fn dial_rotate(
@@ -53,6 +78,16 @@ impl Action for PersistedCounterAction {
 		_pressed: bool,
 	) -> OpenActionResult<()> {
 		increment(instance, settings, settings.step * (ticks as isize)).await
+	}
+
+	async fn touch_tap(
+		&self,
+		instance: &Instance,
+		settings: &Self::Settings,
+		_position: (u16, u16),
+		_hold: bool,
+	) -> OpenActionResult<()> {
+		increment(instance, settings, settings.step).await
 	}
 }
 
@@ -67,6 +102,7 @@ impl Action for TemporaryCounterAction {
 		instance: &Instance,
 		settings: &Self::Settings,
 	) -> OpenActionResult<()> {
+		apply_layout(instance).await?;
 		increment(instance, settings, -settings.value).await
 	}
 
@@ -74,12 +110,8 @@ impl Action for TemporaryCounterAction {
 		increment(instance, settings, settings.step).await
 	}
 
-	async fn dial_up(
-		&self,
-		instance: &Instance,
-		settings: &Self::Settings,
-	) -> OpenActionResult<()> {
-		self.key_down(instance, settings).await
+	async fn dial_up(&self, instance: &Instance, settings: &Self::Settings) -> OpenActionResult<()> {
+		increment(instance, settings, settings.step).await
 	}
 
 	async fn dial_rotate(
@@ -90,6 +122,16 @@ impl Action for TemporaryCounterAction {
 		_pressed: bool,
 	) -> OpenActionResult<()> {
 		increment(instance, settings, settings.step * (ticks as isize)).await
+	}
+
+	async fn touch_tap(
+		&self,
+		instance: &Instance,
+		settings: &Self::Settings,
+		_position: (u16, u16),
+		_hold: bool,
+	) -> OpenActionResult<()> {
+		increment(instance, settings, settings.step).await
 	}
 }
 

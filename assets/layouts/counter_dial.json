@@ -1,0 +1,25 @@
+{
+  "id": "me.amankhanna.oacounter.dial",
+  "items": [
+    {
+      "key": "background",
+      "type": "pixmap",
+      "rect": [0, 0, 200, 100],
+      "background": "#000000",
+      "zOrder": 0
+    },
+    {
+      "key": "value",
+      "type": "text",
+      "rect": [0, 0, 200, 100],
+      "font": {
+        "size": 42,
+        "weight": 700
+      },
+      "color": "#ffffff",
+      "alignment": "center",
+      "value": "0",
+      "zOrder": 1
+    }
+  ]
+}

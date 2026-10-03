@@ -1,9 +1,12 @@
 {
 	"Name": "Counter",
 	"Author": "nekename",
-	"Version": "1.0.1",
+	"Version": "1.1.0",
 	"Category": "Counter",
 	"Icon": "icon",
+	"Software": {
+		"MinimumVersion": "7"
+	},
 	"OS": [{ "Platform": "windows" }, { "Platform": "mac" }, { "Platform": "linux" }],
 	"CodePaths": {
 		"x86_64-pc-windows-msvc": "oacounter-x86_64-pc-windows-msvc.exe",
@@ -22,7 +25,7 @@
 			"Name": "Persisted Counter",
 			"Icon": "icon",
 			"Tooltip": "A counter that remembers its value",
-			"Controllers": ["Keypad", "Encoder"],
+			"Controllers": ["Keypad", "Encoder", "Neo"],
 			"States": [{ "Title": "0" }]
 		},
 		{
@@ -30,7 +33,7 @@
 			"Name": "Temporary Counter",
 			"Icon": "icon",
 			"Tooltip": "A counter that doesn't remember its value",
-			"Controllers": ["Keypad", "Encoder"],
+			"Controllers": ["Keypad", "Encoder", "Neo"],
 			"States": [{ "Title": "0" }]
 		}
 	]
