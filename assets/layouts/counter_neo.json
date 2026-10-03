@@ -2,13 +2,6 @@
   "id": "me.amankhanna.oacounter.neo",
   "items": [
     {
-      "key": "background",
-      "type": "pixmap",
-      "rect": [0, 0, 232, 50],
-      "background": "#000000",
-      "zOrder": 0
-    },
-    {
       "key": "value",
       "type": "text",
       "rect": [0, 0, 232, 50],
@@ -18,8 +11,9 @@
       },
       "color": "#ffffff",
       "alignment": "center",
+      "background": "#000000",
       "value": "0",
-      "zOrder": 1
+      "zOrder": 0
     }
   ]
 }
