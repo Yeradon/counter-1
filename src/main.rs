@@ -28,12 +28,15 @@ async fn apply_layout(instance: &Instance) -> OpenActionResult<()> {
 }
 
 async fn update_display(instance: &Instance, value: isize) -> OpenActionResult<()> {
-	instance
+	let _ = instance
 		.set_title(Some(value.to_string()), None)
-		.await?;
-	instance
-		.set_feedback(&serde_json::json!({ "value": value.to_string() }))
-		.await
+		.await;
+	if instance.controller != "Keypad" {
+		let _ = instance
+			.set_feedback(&serde_json::json!({ "value": value.to_string() }))
+			.await;
+	}
+	Ok(())
 }
 
 async fn increment(
